@@ -8,6 +8,17 @@ import handle_method
 
 
 
+def prepare(func):
+    def wrapper(self, **kwargs):
+        func_name = func.__name__
+        doc_func= getattr(self.operate_method, func_name).__doc__
+        print('参数介绍：', doc_func)
+
+        if kwargs.get('file_name', None) is None:
+            kwargs['file_name'] = self.file_name
+        return func(self, **kwargs)
+    return wrapper
+
 class OperateFile:
 
     def __init__(self,file_name):
@@ -28,38 +39,29 @@ class OperateFile:
         return operate_method()
 
 
+
+    @prepare
     def read_method(self, **kwargs):
         '''
         文件读取的格式；
         :param kwargs:
         :return:
         '''
-        print('读方法参数：', self.operate_method.read_method.__doc__)
-        # 默认的读取方式是使用 传入的方法；可以自行指定
-        try:
-            print('正在使用的文件为：', kwargs['file_name'])
-        except:
-            kwargs['file_name'] = self.file_name
         return self.operate_method.read_method(**kwargs)
 
+    @prepare
     def write_method(self, **kwargs):
         '''
         文件的写入方式
         :param kwargs:
         :return:
         '''
-        print('写方法参数：', self.operate_method.write_method.__doc__)
-        try:
-            print('正在使用的文件为：', kwargs['file_name'])
-        except:
-            kwargs['file_name'] = self.file_name
-
         self.operate_method.write_method(**kwargs)
 
 
 
 if __name__ == '__main__':
-    file_name= 'data1.csv'
+    file_name= 'data1.xlsx'
     open_test = OperateFile(file_name)
     method_test = open_test.read_method() #file_name=file_name
     # print(open_test.read_method.__doc__)

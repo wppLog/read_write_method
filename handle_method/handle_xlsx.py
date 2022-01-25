@@ -20,7 +20,7 @@ class HandleXlsx(HandleFile):
         相关的参数介绍 file_name:需要读取的 xlsx文件；sheet_name: 表名（默认为None）
         :param file_name:需要读取的 xlsx文件
         :param sheet_name: 表名
-        :return:
+        :return:以行为单位进行返回，第一行为 列的标题
         '''
         data_result = []
 

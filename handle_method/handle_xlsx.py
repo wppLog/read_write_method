@@ -17,7 +17,7 @@ class HandleXlsx(HandleFile):
 
     def read_method(self, file_name, sheet_name=None):
         '''
-
+        相关的参数介绍 file_name:需要读取的 xlsx文件；sheet_name: 表名（默认为None）
         :param file_name:需要读取的 xlsx文件
         :param sheet_name: 表名
         :return:

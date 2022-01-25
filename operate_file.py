@@ -3,8 +3,24 @@
 # @Author: wangpengpeng
 # @Version: first
 # @ Function:
+
 import handle_method
-import os
+
+def wrapper(self):
+    def outwrapper(func):
+        def wrapper(*args, **kwargs):
+            print('读方法参数：', self.operate_method.read_method.__doc__)
+            print('写方法参数：', self.operate_method.write_method.__doc__)
+            # 默认的读取方式是使用 传入的方法；可以自行指定
+            try:
+                print('正在使用的文件为：', kwargs['file_name'])
+            except:
+                kwargs['file_name'] = self.file_name
+            return func(*args, **kwargs)
+        return wrapper
+    return outwrapper
+
+
 
 class OperateFile:
 
@@ -25,15 +41,40 @@ class OperateFile:
         operate_method = getattr(handle_method, 'Handle{}'.format(file_suffix))
         return operate_method()
 
+
     def read_method(self, **kwargs):
+        '''
+        文件读取的格式；
+        :param kwargs:
+        :return:
+        '''
+        print('函数的使用方法：', self.operate_method.read_method.__doc__)
+        # 默认的读取方式是使用 传入的方法；可以自行指定
+        try:
+            print('正在使用的文件为：', kwargs['file_name'])
+        except:
+            kwargs['file_name'] = self.file_name
         return self.operate_method.read_method(**kwargs)
 
     def write_method(self, **kwargs):
+        '''
+        文件的写入方式
+        :param kwargs:
+        :return:
+        '''
+        print('函数的使用方法：', self.operate_method.write_method.__doc__)
+        try:
+            print('正在使用的文件为：', kwargs['file_name'])
+        except:
+            kwargs['file_name'] = self.file_name
+
         self.operate_method.write_method(**kwargs)
+
+
 
 if __name__ == '__main__':
     file_name= 'data1.xlsx'
     open_test = OperateFile(file_name)
-    method_test = open_test.read_method(file_name=file_name)
-    print(method_test)
+    method_test = open_test.read_method() #file_name=file_name
+    # print(open_test.read_method.__doc__)
 

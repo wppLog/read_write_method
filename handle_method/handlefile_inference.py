@@ -5,7 +5,7 @@
 # @ Function:
 
 import os
-
+from .utils.check_method import check_read, check_write
 class HandleFile:
 
 

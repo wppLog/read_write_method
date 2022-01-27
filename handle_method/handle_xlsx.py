@@ -15,6 +15,8 @@ class HandleXlsx(HandleFile):
 
 
 
+
+    @check_read
     def read_method(self, file_name, sheet_name=None):
         '''
         相关的参数介绍 file_name:需要读取的 xlsx文件；sheet_name: 表名（默认为None）
@@ -42,6 +44,7 @@ class HandleXlsx(HandleFile):
 
         return data_result
 
+    @check_write
     def write_method(self, dst_file, sheet_name='sheet',  titlename_list=[] , contents=[]):
         """
 
@@ -51,27 +54,18 @@ class HandleXlsx(HandleFile):
         :param contents: 数据内容
         :return:
         """
-        # 校验文件保存的文件夹是否存在
-        self.check_dir(dst_file)
+        wb = Workbook()
+        # TODO 该处测试 index为其他值的时候 无法做到在原文件下改写
+        wb.create_sheet(index=0, title=sheet_name)
+        # 获取当前活跃的sheet，默认是第一个sheet
+        ws = wb.active
 
-        try:
-            wb = Workbook()
-            # TODO 该处测试 index为其他值的时候 无法做到在原文件下改写
-            wb.create_sheet(index=0, title=sheet_name)
-            # 获取当前活跃的sheet，默认是第一个sheet
-            ws = wb.active
+        # 写入第一行的 标题
+        for i, titlename in enumerate(titlename_list):
+            ws.cell(1, i + 1).value = titlename
 
-            # 写入第一行的 标题
-            for i, titlename in enumerate(titlename_list):
-                ws.cell(1, i+1).value = titlename
+        for content in contents:
+            ws.append(content)
 
-            for content in contents:
-                ws.append(content)
-
-            wb.save(dst_file)
-            return True
-
-        except Exception as e:
-            print(e, "数据保存失败 ")
-            return False
+        wb.save(dst_file)
 

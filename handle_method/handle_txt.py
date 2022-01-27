@@ -11,14 +11,16 @@ class HandleTxt(HandleFile):
     def __init__(self):
         super().__init__()
 
+    @check_read
     def read_method(self, file_name):
         '''
         :param file_name: 目标文件
         :return: 返回一个数组
         '''
-        self.check_file(file_name)
-        return  open(file_name, 'r').readlines()
+        result = open(file_name, 'r').readlines()
+        return  result
 
+    @check_write
     def write_method(self, dst_file, contents):
         '''
 
@@ -26,13 +28,8 @@ class HandleTxt(HandleFile):
         :param contents: list类型
         :return: 返回 T/F 提示对文件进行写入完成
         '''
-        self.check_dir(dst_file)
-        try:
-            with open(dst_file, 'w') as dst_lines:
-                for content in contents:
-                    dst_lines.write(content + '\n')
-            return True
-        except Exception as e:
-            print(e)
-            return False
+        with open(dst_file, 'w') as dst_lines:
+            for content in contents:
+                dst_lines.write(content + '\n')
+
 
